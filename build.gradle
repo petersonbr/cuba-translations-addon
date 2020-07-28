@@ -1,6 +1,7 @@
 
 buildscript {
     ext.cubaVersion = '7.2.0'
+    ext.translationsRepo = 'https://github.com/cuba-platform/translations.git'
     repositories {
         maven {
             url 'https://dl.bintray.com/cuba-platform/main'
@@ -177,7 +178,7 @@ restart.finalizedBy start
 task updateSubmodules(type:Exec) {
     group 'Build Setup'
     description 'Updates (and inits) git submodules'
-    def command = 'git submodule update --init --recursive'
+    def command = "git submodule update --init"
     if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
         commandLine 'cmd', '/c', "$command"
     } else {

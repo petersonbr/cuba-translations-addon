@@ -1,3 +1,4 @@
 [submodule "translations"]
 	path = translations
 	url = https://github.com/cuba-platform/translations.git
+	branch = master
