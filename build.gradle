@@ -77,6 +77,13 @@ configure(globalModule) {
             enabled = true
         }
     }
+
+    jar {
+        manifest {
+            attributes('App-Component-Id': cuba.artifact.group)
+            attributes('App-Component-Version': cuba.artifact.version + (cuba.artifact.isSnapshot ? '-SNAPSHOT' : ''))
+        }
+    }
 }
 
 configure(coreModule) {
@@ -167,3 +174,39 @@ task restart(dependsOn: ['stop', ":${modulePrefix}-core:deploy", ":${modulePrefi
 }
 restart.finalizedBy start
 
+task updateSubmodules(type:Exec) {
+    description 'Updates (and inits) git submodules'
+    commandLine 'git', 'submodule', 'update', '--init', '--recursive'
+    group 'Build Setup'
+    doLast {
+        println 'Updating translations'
+    }
+}
+
+task copyTranslations(type:Copy) {
+    from '/translations/content'
+    into '/modules'
+    include '**/*.properties'
+    exclude { FileTreeElement details ->
+        // remove english and russian translations already included in cuba
+        ['en', 'ru'].contains(details.path) ||
+        // remove english translations inside other language translations folders
+        details.file.name.equals('messages.properties') ||
+        // remove version 7.1 translations
+        details.path.endsWith('7.1')
+    }
+    eachFile {
+        String[] splitArray = it.path.split('/')
+        String lang = splitArray[0]
+        String project = splitArray[1]
+        String version = splitArray[2]
+        String module = splitArray[4]
+        // Correctly set translation path
+        it.path = it.path.replace("$lang/$project/$version/modules/$module", "$module")
+    }
+}
+
+copyTranslations.dependsOn updateSubmodules
+
+task install
+install.dependsOn copyTranslations
