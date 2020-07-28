@@ -175,11 +175,13 @@ task restart(dependsOn: ['stop', ":${modulePrefix}-core:deploy", ":${modulePrefi
 restart.finalizedBy start
 
 task updateSubmodules(type:Exec) {
-    description 'Updates (and inits) git submodules'
-    commandLine 'git', 'submodule', 'update', '--init', '--recursive'
     group 'Build Setup'
-    doLast {
-        println 'Updating translations'
+    description 'Updates (and inits) git submodules'
+    def command = 'git submodule update --init --recursive'
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine 'cmd', '/c', "$command"
+    } else {
+        commandLine 'sh', '-c', "$command"
     }
 }
 
@@ -196,16 +198,15 @@ task copyTranslations(type:Copy) {
         details.path.endsWith('7.1')
     }
     eachFile {
-        String[] splitArray = it.path.split('/')
-        String lang = splitArray[0]
-        String project = splitArray[1]
-        String version = splitArray[2]
-        String module = splitArray[4]
+        def splitArray = it.path.split('/')
+        def lang = splitArray[0]
+        def project = splitArray[1]
+        def version = splitArray[2]
+        def module = splitArray[4]
         // Correctly set translation path
         it.path = it.path.replace("$lang/$project/$version/modules/$module", "$module")
     }
 }
-
 copyTranslations.dependsOn updateSubmodules
 
 task install
