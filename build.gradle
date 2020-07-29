@@ -1,11 +1,14 @@
 
 buildscript {
-    ext.cubaVersion = '7.2.0'
+    ext.cubaVersion = '7.1.0'
     repositories {
         maven {
             url 'https://dl.bintray.com/cuba-platform/main'
+            
         }
         jcenter()
+
+        
     }
     dependencies {
         classpath "com.haulmont.gradle:cuba-plugin:$cubaVersion"
@@ -27,8 +30,11 @@ apply(plugin: 'cuba')
 cuba {
     artifact {
         group = 'br.com.petersonbr.translations'
-        version = '7.2.0'
+        version = '7.1.0'
         isSnapshot = false
+    }
+    tomcat {
+        dir = "$project.rootDir/deploy/tomcat"
     }
 }
 
@@ -43,10 +49,8 @@ configure([globalModule, coreModule, webModule]) {
     apply(plugin: 'maven')
     apply(plugin: 'cuba')
 
-    dependencies {
-            testCompile('org.junit.jupiter:junit-jupiter-api:5.5.2')
-            testCompile('org.junit.jupiter:junit-jupiter-engine:5.5.2')
-            testCompile('org.junit.vintage:junit-vintage-engine:5.5.2')  
+    dependencies { 
+            testCompile('junit:junit:4.12') 
         }
 
     task sourceJar(type: Jar) {
@@ -57,9 +61,6 @@ configure([globalModule, coreModule, webModule]) {
     artifacts {
         archives sourceJar
     } 
-    test {
-        useJUnitPlatform()
-    }
 }
 
 
@@ -74,13 +75,6 @@ configure(globalModule) {
     entitiesEnhancing {
         main {
             enabled = true
-        }
-    }
-
-    jar {
-        manifest {
-            attributes('App-Component-Id': cuba.artifact.group)
-            attributes('App-Component-Version': cuba.artifact.version + (cuba.artifact.isSnapshot ? '-SNAPSHOT' : ''))
         }
     }
 }
@@ -99,8 +93,15 @@ configure(coreModule) {
         testRuntime(hsql)
     }
 
-    task cleanConf(description: 'Cleans up conf directory', type: Delete) {
-        delete "$cuba.appHome/${modulePrefix}-core/conf"
+    task cleanConf(description: 'Cleans up conf directory') {
+        doLast {
+            def dir = new File(cuba.tomcat.dir, "/conf/${modulePrefix}-core")
+            if (dir.isDirectory()) {
+                ant.delete(includeemptydirs: true) {
+                    fileset(dir: dir, includes: '**/*', excludes: 'local.app.properties')
+                }
+            }
+        }
     }
 
     task deploy(dependsOn: [assemble, cleanConf], type: CubaDeployment) {
@@ -109,9 +110,19 @@ configure(coreModule) {
     }
 
     task createDb(dependsOn: assembleDbScripts, description: 'Creates local database', type: CubaDbCreation) {
+        dbms = 'hsql'
+        host = 'localhost:9010'
+        dbName = 'translations-9nw7UqGtW'
+        dbUser = 'sa'
+        dbPassword = ''
     }
 
     task updateDb(dependsOn: assembleDbScripts, description: 'Updates local database', type: CubaDbUpdate) {
+        dbms = 'hsql'
+        host = 'localhost:9010'
+        dbName = 'translations-9nw7UqGtW'
+        dbUser = 'sa'
+        dbPassword = ''
     }
 }
 
@@ -138,7 +149,7 @@ configure(webModule) {
     task deployConf(type: Copy) {
         from file('src')
         include "br/com/petersonbr/translations/**"
-        into "$cuba.appHome/${modulePrefix}/conf"
+        into "$cuba.tomcat.dir/conf/${modulePrefix}"
     }
 
     task clearMessagesCache(type: CubaClearMessagesCache) {
@@ -146,8 +157,15 @@ configure(webModule) {
     }
     deployConf.dependsOn clearMessagesCache
 
-    task cleanConf(description: 'Cleans up conf directory', type: Delete) {
-        delete "$cuba.appHome/${modulePrefix}/conf"
+    task cleanConf(description: 'Cleans up conf directory') {
+        doLast {
+            def dir = new File(cuba.tomcat.dir, "/conf/${modulePrefix}")
+            if (dir.isDirectory()) {
+                ant.delete(includeemptydirs: true) {
+                    fileset(dir: dir, includes: '**/*', excludes: 'local.app.properties')
+                }
+            }
+        }
     }
 
     task deploy(dependsOn: [assemble, cleanConf], type: CubaDeployment) {
@@ -169,9 +187,9 @@ task restart(dependsOn: ['stop', ":${modulePrefix}-core:deploy", ":${modulePrefi
                 socket(server: 'localhost', port: '8787')
             }
         }
+        start.execute()
     }
 }
-restart.finalizedBy start
 
 task updateSubmodules(type:Exec) {
     group 'Build Setup'
