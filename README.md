@@ -12,27 +12,38 @@ This project includes all available translations in the [translations](https://g
 
 ## Installation
 
-**NOTE**: This add-on's repository is officially linked to the main CUBA repository.
+1. Add the component repository to your `build.gradle` file:
 
-You can use **CUBA Studio** / **IntelliJ IDEA** to add it to your project: choose the `CUBA -> Marketplace...` menu item,
-find the *Italian Translation* add-on, then click on the `Install` button.
+```
+repositories {
+    maven {
+        url  "https://dl.bintray.com/petersonbr/cuba-components" 
+    }
+}
+```
 
-The following table shows which version of the add-on is compatible with which version of the framework:
+2. Add the component [using Studio](https://doc.cuba-platform.com/manual-latest/app_components_usage.html#app_components_usage_by_studio) using a compatible version of the add-on:
 
-| Platform Version | Add-on Version | Coordinates
-| ---------------- | -------------- | ------------
-| 7.1.*            | 7.1.0          | br.com.petersonbr.translations:cuba-translations-addon-global:7.1.0
-| 7.2.*            | 7.2.0          | br.com.petersonbr.translations:cuba-translations-addon-global:7.2.0
+| Platform Version | Add-on Version | Coordinates                                                  |
+| ---------------- | -------------- | ------------------------------------------------------------ |
+| 7.1.*            | 7.1.0          | br.com.petersonbr.translations:cuba-translations-addon-global:7.1.0 |
+| 7.2.*            | 7.2.0          | br.com.petersonbr.translations:cuba-translations-addon-global:7.2.0 |
 
 The latest stable version is: `7.2.0`
+
+
 
 ## Supported DBMS engines
 
 _N/A_ - This component does not need any data
 
+
+
 ## Created tables
 
 _NONE_
+
+
 
 ## Implementation Details
 
