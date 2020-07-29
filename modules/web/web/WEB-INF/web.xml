@@ -8,7 +8,7 @@
     <context-param>
         <param-name>appPropertiesConfig</param-name>
         <param-value>
-            classpath:br/com/petersonbr/translationsaddon/web-app.properties
+            classpath:br/com/petersonbr/translations/web-app.properties
             /WEB-INF/local.app.properties
             "file:${app.home}/local.app.properties"
         </param-value>

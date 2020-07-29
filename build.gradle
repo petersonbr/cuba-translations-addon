@@ -28,9 +28,9 @@ apply(plugin: 'cuba')
 
 cuba {
     artifact {
-        group = 'br.com.petersonbr.translationsaddon'
-        version = '0.1'
-        isSnapshot = true
+        group = 'br.com.petersonbr.translations'
+        version = '1.0.0'
+        isSnapshot = false
     }
 }
 
@@ -139,7 +139,7 @@ configure(webModule) {
 
     task deployConf(type: Copy) {
         from file('src')
-        include "br/com/petersonbr/translationsaddon/**"
+        include "br/com/petersonbr/translations/**"
         into "$cuba.appHome/${modulePrefix}/conf"
     }
 

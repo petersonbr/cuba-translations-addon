@@ -1,6 +1,6 @@
-package br.com.petersonbr.translationsaddon.core;
+package br.com.petersonbr.translations.core;
 
-import br.com.petersonbr.translationsaddon.TranslationsaddonTestContainer;
+import br.com.petersonbr.translations.TranslationsTestContainer;
 import com.haulmont.cuba.core.EntityManager;
 import com.haulmont.cuba.core.Persistence;
 import com.haulmont.cuba.core.Transaction;
@@ -17,7 +17,7 @@ import java.util.List;
 public class SampleIntegrationTest {
 
     @RegisterExtension
-    public static TranslationsaddonTestContainer cont = TranslationsaddonTestContainer.Common.INSTANCE;
+    public static TranslationsTestContainer cont = TranslationsTestContainer.Common.INSTANCE;
 
     private static Metadata metadata;
     private static Persistence persistence;
