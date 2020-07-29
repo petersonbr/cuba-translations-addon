@@ -12,3 +12,4 @@ test-run
 modules/*/src/com/haulmont/*
 modules/web/idp/*
 modules/web/web/idp/*
+modules/idp/*
