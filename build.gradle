@@ -1,18 +1,16 @@
 
 buildscript {
     ext.cubaVersion = '7.2.0'
-    ext.translationsRepo = 'https://github.com/cuba-platform/translations.git'
     repositories {
         maven {
             url 'https://dl.bintray.com/cuba-platform/main'
-            
         }
         jcenter()
-
-        
     }
     dependencies {
         classpath "com.haulmont.gradle:cuba-plugin:$cubaVersion"
+        // Bintray upload plugin
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
     }
 }
 
@@ -29,7 +27,7 @@ apply(plugin: 'cuba')
 cuba {
     artifact {
         group = 'br.com.petersonbr.translations'
-        version = '1.0.0'
+        version = '7.2.0'
         isSnapshot = false
     }
 }
@@ -189,7 +187,7 @@ task updateSubmodules(type:Exec) {
 task copyTranslations(type:Copy) {
     from '/translations/content'
     into '/modules'
-    include '**/*.properties'
+    includeEmptyDirs = false
     exclude { FileTreeElement details ->
         // remove english and russian translations already included in cuba
         ['en', 'ru'].contains(details.path) ||
@@ -206,9 +204,51 @@ task copyTranslations(type:Copy) {
         def module = splitArray[4]
         // Correctly set translation path
         it.path = it.path.replace("$lang/$project/$version/modules/$module", "$module")
+        println "Copying file '$it.path'"
     }
 }
 copyTranslations.dependsOn updateSubmodules
 
 task install
 install.dependsOn copyTranslations
+
+subprojects {
+    apply plugin: 'com.jfrog.bintray'
+
+    bintrayUpload.dependsOn copyTranslations
+
+    bintray {
+        user = System.getenv('BINTRAY_USER')
+        key = System.getenv('BINTRAY_API_KEY')
+
+        configurations = ['archives']
+
+        publish = true
+
+        override = false
+
+        // metadata
+        pkg {
+            repo = 'cuba-components'
+            name = 'cuba-translations-addon'
+            desc = 'CUBA addon with all available community translations'
+
+            websiteUrl = 'https://github.com/petersonbr/cuba-translations-addon'
+            issueTrackerUrl = 'https://github.com/petersonbr/cuba-translations-addon/issues'
+            vcsUrl = 'https://github.com/petersonbr/cuba-translations-addon.git' // mandatory for Open Source projects
+
+            licenses = ["Apache-2.0"]
+
+            labels = ['cuba', 'cuba-platform', 'cuba-component', 'translation', 'localization']
+            githubRepo = 'petersonbr/cuba-translations-addon'
+            //githubReleaseNotesFile = 'CHANGELOG.md' // optional Github readme file
+
+            version {
+                name = "${cuba.artifact.version}"
+                desc = ''
+                released = new Date()
+                vcsTag = "${cuba.artifact.version}"
+            }
+        }
+    }
+}

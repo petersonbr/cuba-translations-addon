@@ -15,8 +15,8 @@ The following table shows which version of the add-on is compatible with which v
 
 | Platform Version | Add-on Version | Coordinates
 | ---------------- | -------------- | ------------
-| 7.1.*            | 7.1.0          | br.com.petersonbr.translationsaddon:cuba-translations-addon-global:7.1.0
-| 7.2.*            | 7.2.0          | br.com.petersonbr.translationsaddon:cuba-translations-addon-global:7.2.1
+| 7.1.*            | 7.1.0          | br.com.petersonbr.translations:cuba-translations-addon-global:7.1.0
+| 7.2.*            | 7.2.0          | br.com.petersonbr.translations:cuba-translations-addon-global:7.2.1
 
 The latest stable version is: `7.2.0`
 
