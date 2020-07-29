@@ -4,6 +4,12 @@
 
 This project includes all available translations in the [translations](https://github.com/cuba-platform/translations) project in a single add-on. The goal is to help new users evaluating the platform in their native language (when available) because not all languages have a dedicated addon.
 
+* This project only wraps CUBA-Platform translation project as an addon. Any changes in the translation values should be done in the translation project.
+* English and Russian translations are removed because they are already included in CUBA-Platform by default.
+* Some translations have a different folder hierarchy and will not work (IDP for example).
+
+
+
 ## Installation
 
 **NOTE**: This add-on's repository is officially linked to the main CUBA repository.
