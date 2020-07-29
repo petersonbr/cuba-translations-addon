@@ -211,8 +211,8 @@ task copyTranslations(type:Copy) {
         ['en', 'ru'].contains(details.path) ||
         // remove english translations inside other language translations folders
         details.file.name.equals('messages.properties') ||
-        // remove version 7.1 translations
-        details.path.endsWith('7.1')
+        // remove version 7.2 translations
+        details.path.endsWith('7.2')
     }
     eachFile {
         def splitArray = it.path.split('/')
