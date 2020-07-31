@@ -30,7 +30,7 @@ apply(plugin: 'cuba')
 cuba {
     artifact {
         group = 'br.com.petersonbr.translations'
-        version = '7.1.0'
+        version = '7.1.1'
         isSnapshot = false
     }
     tomcat {
@@ -75,6 +75,13 @@ configure(globalModule) {
     entitiesEnhancing {
         main {
             enabled = true
+        }
+    }
+
+    jar {
+        manifest {
+            attributes('App-Component-Id': cuba.artifact.group)
+            attributes('App-Component-Version': cuba.artifact.version + (cuba.artifact.isSnapshot ? '-SNAPSHOT' : ''))
         }
     }
 }

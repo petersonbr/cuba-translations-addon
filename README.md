@@ -26,7 +26,7 @@ repositories {
 
 | Platform Version | Add-on Version | Coordinates                                                  |
 | ---------------- | -------------- | ------------------------------------------------------------ |
-| 7.1.*            | 7.1.0          | br.com.petersonbr.translations:cuba-translations-addon-global:7.1.0 |
+| 7.1.*            | 7.1.1          | br.com.petersonbr.translations:cuba-translations-addon-global:7.1.1 |
 | 7.2.*            | 7.2.0          | br.com.petersonbr.translations:cuba-translations-addon-global:7.2.0 |
 
 The latest stable version is: `7.2.0`

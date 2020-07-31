@@ -4,28 +4,12 @@
 
     <module name="global" blocks="*">
         <artifact name="cuba-translations-addon-global" appJar="true"/>
-
-        <property name="cuba.persistenceConfig" value="+br/com/petersonbr/translations/persistence.xml"/>
-        <property name="cuba.metadataConfig" value="+br/com/petersonbr/translations/metadata.xml"/>
-        <property name="cuba.viewsConfig" value="+br/com/petersonbr/translations/views.xml"/>
     </module>
     <module name="core" dependsOn="global" blocks="core">
         <artifact name="cuba-translations-addon-core" appJar="true"/>
-        <artifact name="cuba-translations-addon-core" classifier="db" ext="zip" configuration="dbscripts"/>
-
-        <property name="cuba.springContextConfig" value="+br/com/petersonbr/translations/spring.xml"/>
-        <property name="cuba.mainMessagePack" value="+br.com.petersonbr.translations.core"/>
     </module>
     <module name="web" dependsOn="global" blocks="web">
         <artifact name="cuba-translations-addon-web" appJar="true"/>
         <artifact name="cuba-translations-addon-web" classifier="web" ext="zip" configuration="webcontent"/>
-
-        <property name="cuba.springContextConfig" value="+br/com/petersonbr/translations/web-spring.xml"/>
-        <property name="cuba.dispatcherSpringContextConfig"
-                  value="+br/com/petersonbr/translations/web-dispatcher-spring.xml"/>
-        <property name="cuba.windowConfig" value="+br/com/petersonbr/translations/web-screens.xml"/>
-        <property name="cuba.menuConfig" value="+br/com/petersonbr/translations/web-menu.xml"/>
-        <property name="cuba.permissionConfig" value="+br/com/petersonbr/translations/web-permissions.xml"/>
-        <property name="cuba.mainMessagePack" value="+br.com.petersonbr.translations.web"/>
     </module>
 </app-component>
