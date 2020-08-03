@@ -1,6 +1,9 @@
 
 buildscript {
     ext.cubaVersion = '7.2.0'
+    ext.bprocVersion = '1.1'
+    ext.idpVersion = '0.3'
+    ext.dashboardVersion = '3.2'
     repositories {
         maven {
             url 'https://dl.bintray.com/cuba-platform/main'
@@ -190,21 +193,64 @@ task copyTranslations(type:Copy) {
     includeEmptyDirs = false
     exclude { FileTreeElement details ->
         // remove english and russian translations already included in cuba
-        ['en', 'ru'].contains(details.path) ||
+        // ['en', 'ru'].contains(details.path) ||
         // remove english translations inside other language translations folders
-        details.file.name.equals('messages.properties') ||
+        //details.file.name.equals('messages.properties') ||
+
+        //(!details.relativePath.pathString.startsWith('en') && details.file.name.equals('messages.properties'))
         // remove version 7.1 translations
-        details.path.endsWith('7.1')
+        //details.path.endsWith('7.1')
     }
-    eachFile {
-        def splitArray = it.path.split('/')
+    eachFile { FileCopyDetails fcd ->
+        def splitArray = fcd.path.split('/')
         def lang = splitArray[0]
         def project = splitArray[1]
         def version = splitArray[2]
         def module = splitArray[4]
-        // Correctly set translation path
-        it.path = it.path.replace("$lang/$project/$version/modules/$module", "$module")
-        println "Copying file '$it.path'"
+        def filename = splitArray[splitArray.length-1];
+
+        // remove english and russian translations already included in cuba
+        if (['en', 'ru'].contains(lang)) {
+            println "Excluding '$fcd.path'"
+            fcd.exclude();
+        }
+
+        // Don't copy english translations inside other languages folders
+        if ("messages.properties".equals(filename) && !'en'.equals(lang)) {
+            println "Excluding '$fcd.path'"
+            fcd.exclude();
+        }
+
+        // Filter Bproc version
+        else if ('bproc'.equals(project) && !version.startsWith("$bprocVersion")) {
+            println "Excluding '$fcd.path'"
+            fcd.exclude();
+        }
+
+        // Filter Idp version
+        else if ('idp'.equals(project) && !version.startsWith("$idpVersion")) {
+            println "Excluding '$fcd.path'"
+            fcd.exclude();
+        }
+
+        // Filter dashboard version
+        else if ('dashboard'.equals(project) && !version.startsWith("$dashboardVersion")) {
+            println "Excluding '$fcd.path'"
+            fcd.exclude();
+        }
+
+        // Filter platform version
+        else if (['cuba', 'bpm', 'reports', 'charts', 'fts'].contains(project) && !"$cubaVersion".contains(version)) {
+            fcd.exclude();
+        }
+
+        else {
+            def oldPath = fcd.path
+
+            // Correctly set translation path
+            fcd.path = fcd.path.replace("$lang/$project/$version/modules/$module", "$module")
+            println "Copying file '$filename' from '$oldPath' -> '$fcd.path'"
+        }
     }
 }
 copyTranslations.dependsOn updateSubmodules
