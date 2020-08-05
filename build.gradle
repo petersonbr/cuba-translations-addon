@@ -191,6 +191,7 @@ task copyTranslations(type:Copy) {
     from '/translations/content'
     into '/modules'
     includeEmptyDirs = false
+    def availableTranslations = [:];
     eachFile { FileCopyDetails fcd ->
         def splitArray = fcd.path.split('/')
         def lang = splitArray[0]
@@ -258,6 +259,15 @@ task copyTranslations(type:Copy) {
             // Correctly set translation path
             fcd.path = fcd.path.replace("$lang/$project/$version/modules/$module", "$module")
             //println "Copying file '$filename' from '$oldPath' -> '$fcd.path'"
+
+            availableTranslations.put("$lang-$project-$module", true)
+        }
+    }
+    doLast {
+        println 'Available translations:'
+        def entries = availableTranslations.entrySet()
+        entries.each { entry ->
+            println "$entry.key"
         }
     }
 }
