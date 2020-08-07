@@ -30,7 +30,7 @@ apply(plugin: 'cuba')
 cuba {
     artifact {
         group = 'br.com.petersonbr.translations'
-        version = '7.2.0'
+        version = '7.2.1'
         isSnapshot = false
     }
 }
@@ -191,7 +191,7 @@ task copyTranslations(type:Copy) {
     from '/translations/content'
     into '/modules'
     includeEmptyDirs = false
-    def availableTranslations = [:];
+    def availableTranslations = [:]
     eachFile { FileCopyDetails fcd ->
         def splitArray = fcd.path.split('/')
         def lang = splitArray[0]
