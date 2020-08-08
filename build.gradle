@@ -1,6 +1,9 @@
 
 buildscript {
     ext.cubaVersion = '7.1.0'
+    ext.bprocVersion = '1.0'
+    ext.idpVersion = '0.2'
+    ext.dashboardVersion = '3.1'
     repositories {
         maven {
             url 'https://dl.bintray.com/cuba-platform/main'
@@ -30,7 +33,7 @@ apply(plugin: 'cuba')
 cuba {
     artifact {
         group = 'br.com.petersonbr.translations'
-        version = '7.1.1'
+        version = '7.1.2'
         isSnapshot = false
     }
     tomcat {
@@ -213,23 +216,84 @@ task copyTranslations(type:Copy) {
     from '/translations/content'
     into '/modules'
     includeEmptyDirs = false
-    exclude { FileTreeElement details ->
-        // remove english and russian translations already included in cuba
-        ['en', 'ru'].contains(details.path) ||
-        // remove english translations inside other language translations folders
-        details.file.name.equals('messages.properties') ||
-        // remove version 7.2 translations
-        details.path.endsWith('7.2')
-    }
-    eachFile {
-        def splitArray = it.path.split('/')
+    def availableTranslations = [:]
+    eachFile { FileCopyDetails fcd ->
+        def splitArray = fcd.path.split('/')
         def lang = splitArray[0]
         def project = splitArray[1]
         def version = splitArray[2]
         def module = splitArray[4]
-        // Correctly set translation path
-        it.path = it.path.replace("$lang/$project/$version/modules/$module", "$module")
-        println "Copying file '$it.path'"
+        def filename = splitArray[splitArray.length-1];
+
+        // remove english and russian translations already included in cuba
+        if (['en', 'ru'].contains(lang)) {
+            //println "Excluding file '$fcd.path' -> 'en' and 'ru' translations already exists in cuba"
+            fcd.exclude();
+            return
+        }
+
+        // Filter platform version
+        if (['cuba', 'bpm', 'reports', 'charts', 'fts'].contains(project) && !"$cubaVersion".contains(version)) {
+            //println "Excluding file '$fcd.path' -> Different platform version"
+            fcd.exclude();
+            return
+        }
+
+        // Don't copy english translations inside other languages folders
+        if ("messages.properties".equals(filename) && !'en'.equals(lang)) {
+            //println "Excluding file '$fcd.path' -> Don't copy english translations inside other languages folders"
+            fcd.exclude();
+            return
+        }
+
+        // Filter Bproc version
+        if ('bproc'.equals(project) && !version.startsWith("$bprocVersion")) {
+            //println "Excluding file '$fcd.path' -> Different Bproc version"
+            fcd.exclude();
+            return
+        }
+
+        // Filter Idp version
+        if ('idp'.equals(project) && !version.startsWith("$idpVersion")) {
+            //println "Excluding file '$fcd.path' -> Different Idp version"
+            fcd.exclude();
+            return
+        }
+
+        // Filter dashboard version
+        if ('dashboard'.equals(project) && !version.startsWith("$dashboardVersion")) {
+            //println "Excluding file '$fcd.path' -> Different dashboard version"
+            fcd.exclude();
+            return
+        }
+
+        // ignore file if there is no correspondent english translation file
+        def engSplitArray = splitArray.clone()
+        engSplitArray[0] = 'en'
+        engSplitArray[engSplitArray.length-1] = 'messages.properties';
+        def engFile = file('/translations/content/' + engSplitArray.join('/'))
+        if (!engFile.exists()) {
+            println "Excluding file '$fcd.path' -> there is no equivalent english file"
+            fcd.exclude();
+            return
+        }
+
+        else {
+            def oldPath = fcd.path
+
+            // Correctly set translation path
+            fcd.path = fcd.path.replace("$lang/$project/$version/modules/$module", "$module")
+            //println "Copying file '$filename' from '$oldPath' -> '$fcd.path'"
+
+            availableTranslations.put("$lang-$project-$module", true)
+        }
+    }
+    doLast {
+        println 'Available translations:'
+        def entries = availableTranslations.entrySet()
+        entries.each { entry ->
+            println "$entry.key"
+        }
     }
 }
 copyTranslations.dependsOn updateSubmodules
