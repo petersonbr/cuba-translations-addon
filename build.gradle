@@ -204,12 +204,18 @@ task restart(dependsOn: ['stop', ":${modulePrefix}-core:deploy", ":${modulePrefi
 task updateSubmodules(type:Exec) {
     group 'Build Setup'
     description 'Updates (and inits) git submodules'
-    def command = "git submodule update --init"
+    def command = "git submodule update --init && cd translations && git checkout master && git pull"
     if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
         commandLine 'cmd', '/c', "$command"
     } else {
         commandLine 'sh', '-c', "$command"
     }
+}
+
+task cleanTranslations(type: Delete) {
+    delete("modules/core/src/com")
+    delete("modules/global/src/com")
+    delete("modules/web/src/com")
 }
 
 task copyTranslations(type:Copy) {
@@ -297,6 +303,7 @@ task copyTranslations(type:Copy) {
     }
 }
 copyTranslations.dependsOn updateSubmodules
+copyTranslations.dependsOn cleanTranslations
 
 task install
 install.dependsOn copyTranslations
