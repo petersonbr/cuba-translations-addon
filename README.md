@@ -31,11 +31,11 @@ Translations availability depends on the content of the [translations](https://g
 
 | Component / Add-on | Languages                                                    |
 | ------------------ | ------------------------------------------------------------ |
-| cuba               | Danish (da)<br />German (de)<br />Spanish (es)<br />French (fr)<br />Italian (it)<br />Dutch (nl)<br />Portuguese (pt)<br />Brazilian Portuguese (pt_BR)<br />Romanian (ro)<br />Slovak (sk)<br />Turkish (tr)<br />Simplified Chinese (zh_CN) |
-| bpm                | Danish (da)<br />German (de)<br />Spanish (es)<br />French (fr)<br />Italian (it)<br />Simplified Chinese (zh_CN) |
-| charts             | German (de)<br />Spanish (es)<br />French (fr)<br />Italian (it)<br />Brazilian Portuguese (pt_BR)<br />Simplified Chinese (zh_CN) |
-| fts                | German (de)<br />Spanish (es)<br />French (fr)<br />Italian (it)<br />Romanian (ro)<br />Turkish (tr)<br />Simplified Chinese (zh_CN) |
-| reports            | Danish (da)<br />German (de)<br />Spanish (es)<br />French (fr)<br />Italian (it)<br />Romanian (ro)<br />Simplified Chinese (zh_CN) |
+| cuba               | Danish (da)<br />German (de)<br />Spanish (es)<br />French (fr)<br />Italian (it)<br />Dutch (nl)<br />Portuguese (pt)<br />Brazilian Portuguese (pt_BR)<br />Romanian (ro)<br />Slovak (sk)<br />Turkish (tr)<br />Simplified Chinese (zh_CN)<br />Traditional Chinese (zh_HK) |
+| bpm                | Danish (da)<br />German (de)<br />Spanish (es)<br />French (fr)<br />Italian (it)<br />Simplified Chinese (zh_CN)<br />Traditional Chinese (zh_HK) |
+| charts             | German (de)<br />Spanish (es)<br />French (fr)<br />Italian (it)<br />Brazilian Portuguese (pt_BR)<br />Simplified Chinese (zh_CN)<br />Traditional Chinese (zh_HK) |
+| fts                | German (de)<br />Spanish (es)<br />French (fr)<br />Italian (it)<br />Romanian (ro)<br />Turkish (tr)<br />Simplified Chinese (zh_CN)<br />Traditional Chinese (zh_HK) |
+| reports            | Danish (da)<br />German (de)<br />Spanish (es)<br />French (fr)<br />Italian (it)<br />Romanian (ro)<br />Simplified Chinese (zh_CN)<br />Traditional Chinese (zh_HK) |
 | bproc              | German (de)                                                  |
 | idp                | Spanish (es)<br />French (fr)<br />Italian (it)<br />Turkish (tr) |
 

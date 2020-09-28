@@ -33,7 +33,7 @@ apply(plugin: 'cuba')
 cuba {
     artifact {
         group = 'br.com.petersonbr.translations'
-        version = '7.1.2'
+        version = '7.1.3'
         isSnapshot = false
     }
     tomcat {
